@@ -11,13 +11,16 @@ class Binatree():
 
 class Heap():
     def __init__(self, nums):
+        self.numbers = nums
         self.parent = None
-        for num in nums:
+        self.lastbranch = None
+        for num in self.numbers:
             self.insert(num)
 
     def insert(self, num):
         """二分木ピープ構造にnumを加える"""
-        n = self.parent  # nに親ノードを束縛
+        n = self.parent  # nに親を束縛 後から左右のブランチに入れ替えることで降っていく
+        self.numlog.extend(num)
         if n is None:
             # 親に二分木を割り当て
             self.parent = Binatree(num)
@@ -26,8 +29,9 @@ class Heap():
             # 親に数値が入っている場合
             while True:
                 if n.data > num:
-                    #挿入する値numが親より小さい時、numと親を入れ替え
+                    # 挿入する値numが親より小さい時、numと親を入れ替え
                     n.data, num = num, n.data
+                # 最端末にnumを追加する。木をたどって小左右木の値とnumを比較入れ替えし小さい方を上位にする
                 if n.left is None:
                     # 左に二分木を割り当て
                     n.left = Binatree(num)
@@ -40,12 +44,15 @@ class Heap():
                     # 親の左右が埋まっている時、左を親にして子二分木構造生成
                     # alternaで左右交互に切り替え
                     n.alterna = False
-                    n = n.left
+                    n = n.left  # 左ブランチを親としてnに束縛
                 else:
                     # 親の左右が埋まっている時、右を親にして子二分木構造生成
                     n.alterna = True
-                    n = n.right
+                    n = n.right  # 右ブランチを親としてnに束縛
+            self.lastbranch = n
 
-a= Heap([5,2,10,1,3])
-o = a.parent
-print(o.data,o.left.data,o.right.data)
+    def popdata(self):
+        popnum = self.parent.data
+
+ 
+a = Heap([5, 2, 10, 1, 3])
