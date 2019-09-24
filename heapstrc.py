@@ -2,64 +2,132 @@
 
 
 class Binatree():
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, parentbranch=None):
+        self.data = None
         self.left = None
         self.right = None
-        self.alterna = True
+        self.parentbranch = parentbranch
 
 
 class Heap():
-    def __init__(self, nums):
-        self.numbers = nums
-        self.parent = None
-        self.lastbranch = None
-        for num in self.numbers:
-            self.insert(num)
+    def __init__(self):
+        # 親に二本木構造を割り当て
+        self.parent = Binatree(None)
+        self.lastbranches = [self.parent]
+
+    def downheap(self):
+        # 子にデータがない場合は再構築はしない
+        for i in self.lastbranches:
+            if i.data is None:
+                return None
+        else:
+            # 上記for文条件確認を通過したら孫にヒープ構造を割り当て
+            # データ処理対象を1段下がる
+            branches = []
+            for i in self.lastbranches:
+                i.left = Binatree(i)
+                i.right = Binatree(i)
+                branches.append(i.left)
+                branches.append(i.right)
+            self.lastbranches = branches
+
+    def upheap(self):
+        # 其の段にデータがない場合は一段上がる
+        for i in self.lastbranches:
+            # 最上位ではNoneを返す
+            if i.parentbranch is None:
+                return None
+            elif i.data is not None:
+                # 其の段にデータが残っている場合 はFalseを返す
+                return False
+        else:
+            # 上記for文条件確認を通過したら子ヒープ構造をNoneにし
+            # データ処理対象を1段上がる
+            parents = []
+            predata = None
+            for i in self.lastbranches:
+                if i.parentbranch is predata:
+                    # 左右で同じ親が出現するので重複を避ける
+                    pass
+                else:
+                    parents.append(i.parentbranch)
+                    predata = i.parentbranch
+                i = None
+            self.lastbranches = parents
 
     def insert(self, num):
         """二分木ピープ構造にnumを加える"""
-        n = self.parent  # nに親を束縛 後から左右のブランチに入れ替えることで降っていく
-        if n is None:
-            # 親に二分木を割り当て
-            self.parent = Binatree(num)
-            n = self.parent
-        if n.data is None:
-            n.data = num
-        # 親に数値が入っている場合
+        # lastbranchesは二分木構造クラスのlist
+        self.downheap()
+        cur = None
+        for i in self.lastbranches:
+            if i.data is None:
+                i.data = num
+                cur = i
+                break
+
         while True:
-            if n.data > num:
-                # 挿入する値numが親より小さい時、numと親を入れ替え
-                n.data, num = num, n.data
-            # 最端末にnumを追加する。木をたどって小左右木の値とnumを比較入れ替えし小さい方を上位にする
-            if n.left is None:
-                # 左に二分木を割り当て
-                n.left = Binatree(num)
+            if cur.parentbranch is None:
+                # 最上位でループから抜ける
                 break
-            elif n.right is None:
-                # 右に二分木を割り当て
-                n.right = Binatree(num)
-                break
-            elif n.alterna is True:
-                # 親の左右が埋まっている時、左を親にして子二分木構造生成
-                # alternaで左右交互に切り替え
-                n.alterna = False
-                n = n.left  # 左ブランチを親としてnに束縛
+            elif cur.parentbranch.data > cur.data:
+                cur.parentbranch.data, cur.data = cur.data, cur.parentbranch.data
+                cur = cur.parentbranch
             else:
-                # 親の左右が埋まっている時、右を親にして子二分木構造生成
-                n.alterna = True
-                n = n.right  # 右ブランチを親としてnに束縛
-       
-        self.lastbranch = n
+                break
 
     def popdata(self):
-        # 以下検証中
+        """ヒープ構造からtopにある数字を取り出す"""
         popnum = self.parent.data
-        self.parent.data = None
-        num = self.lastbranch.data
-        self.lastbranch.data = None
-        self.insert(num)
-        # return popnum
+        try:
+            lastd = [i for i in self.lastbranches if i.data is not None][-1]
+        except IndexError:
+            return None
+        self.parent.data = lastd.data
+        lastd.data = None
+        self.upheap()
+        cur = self.parent
+        while True:
+            jdleft = False
+            jdright = False
+            if cur.data is None:
+                break
+            if cur.left is not None and cur.left.data is not None:
+                if cur.data > cur.left.data:
+                    cur.data, cur.left.data = cur.left.data, cur.data
+                    jdleft = True
+            if cur.right is not None and cur.right.data is not None:
+                if cur.data > cur.right.data:
+                    cur.data, cur.right.data = cur.right.data, cur.data
+                    jdright = True
 
- 
-a = Heap([5, 2, 10, 1, 3])
+            if jdright:
+                cur = cur.right
+            elif jdleft and jdright is False:
+                cur = cur.left
+            else:
+                break
+        return popnum
+
+    def addnums(self, nums):
+        """insert some numbers"""
+        for i in nums:
+            self.insert(i)
+
+
+def heapsort(numbers):
+    """リストをヒープソートでソート処理して返す"""
+    heapstr = Heap()
+    heapstr.addnums(numbers)
+    sortedlist=[]
+    while True:
+        output = heapstr.popdata()
+        if output:
+            sortedlist.append(output)
+        else:
+            break
+    return sortedlist
+
+example = [5,20,2,1,100,46,3,2]
+print(f'before {example}')
+print(f'after {heapsort(example)}')
