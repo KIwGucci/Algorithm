@@ -40,6 +40,8 @@ class Heap():
             elif i.data is not None:
                 # 其の段にデータが残っている場合 はFalseを返す
                 return False
+            else:
+                pass
         else:
             # 上記for文条件確認を通過したら子ヒープ構造をNoneにし
             # データ処理対象を1段上がる
@@ -70,9 +72,10 @@ class Heap():
             if cur.parentbranch is None:
                 # 最上位でループから抜ける
                 break
-            elif cur.parentbranch.data > cur.data:
-                cur.parentbranch.data, cur.data = cur.data, cur.parentbranch.data
-                cur = cur.parentbranch
+            parent = cur.parentbranch
+            if cur.data < parent.data:
+                cur.data, parent.data = parent.data, cur.data
+                cur = parent
             else:
                 break
 
@@ -88,25 +91,27 @@ class Heap():
         self.upheap()
         cur = self.parent
         while True:
-            jdleft = False
-            jdright = False
-            if cur.data is None:
+            if cur is None:
                 break
-            if cur.left is not None and cur.left.data is not None:
-                if cur.data > cur.left.data:
-                    cur.data, cur.left.data = cur.left.data, cur.data
-                    jdleft = True
-            if cur.right is not None and cur.right.data is not None:
-                if cur.data > cur.right.data:
-                    cur.data, cur.right.data = cur.right.data, cur.data
-                    jdright = True
+            elif cur.data is None or (cur.left is None and cur.right is None):
+                break
+            if cur.left.data is None and cur.right.data is None:
+                break
+            elif cur.left.data is None:
+                children = cur.right
+            elif cur.right.data is None:
+                children = cur.left
+            elif cur.left.data <= cur.right.data:
+                children = cur.left
+            else:
+                children = cur.right
 
-            if jdright:
-                cur = cur.right
-            elif jdleft and jdright is False:
-                cur = cur.left
+            if cur.data > children.data:
+                cur.data, children.data = children.data, cur.data
+                cur = children
             else:
                 break
+
         return popnum
 
     def addnums(self, nums):
@@ -119,7 +124,7 @@ def heapsort(numbers):
     """リストをヒープソートでソート処理して返す"""
     heapstr = Heap()
     heapstr.addnums(numbers)
-    sortedlist=[]
+    sortedlist = []
     while True:
         output = heapstr.popdata()
         if output:
@@ -128,6 +133,7 @@ def heapsort(numbers):
             break
     return sortedlist
 
-example = [5,20,2,1,100,46,3,2]
+
+example = [5, 20, 2, 1, 100, 46, 3, 2, 500, 15, 30, 5]
 print(f'before {example}')
 print(f'after {heapsort(example)}')
