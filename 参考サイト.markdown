@@ -1,6 +1,0 @@
-# アルゴリズム自習実装参考サイト
-
-
-### ヒープ構造
-
-* [Masterring Python](https://python.ms/sub/algorithm/tree/binary-heap/#_2-サンプルコード)
