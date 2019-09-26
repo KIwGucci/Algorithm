@@ -49,9 +49,11 @@ class Heap():
             else:
                 pass
         else:
-            # 上記for文条件確認を通過したら子ヒープ構造をNoneにし
+            # 最末端のデータが全て値を持っていない時、現在処理対象となっている二分木をNoneにし
             # データ処理対象を1段上がる
+            # 現在の処理対象となっている二分木の親をparentsリストに格納する
             parents = []
+            # predata:前のデータを記憶しておくための仮変数
             predata = None
             for i in self.lastbranches:
                 if i.parentbranch is predata:
@@ -60,15 +62,20 @@ class Heap():
                 else:
                     parents.append(i.parentbranch)
                     predata = i.parentbranch
+                # 親の格納が終わった二分木データ構造をNoneとする
                 i = None
+            # 処理対象データを現在の二分木の親に変更し処理対象を一段あげる。
             self.lastbranches = parents
 
     def insert(self, num):
         """二分木ピープ構造にnumを加える"""
         # lastbranchesは二分木構造クラスのlist
+        # ヒープ構造を再構築
         self.downheap()
         cur = None
         for i in self.lastbranches:
+            # ヒープ最末端のデータ群のdataの値がNoneのものが
+            # 見つかった時点でnumの値を代入する
             if i.data is None:
                 i.data = num
                 cur = i
@@ -80,23 +87,32 @@ class Heap():
                 break
             parent = cur.parentbranch
             if cur.data < parent.data:
+                # 追加したデータの値と其の親のdataの値を比較して親よりも値が小さい時は
+                # 値を入れ替える。
                 cur.data, parent.data = parent.data, cur.data
+                # さらに其の親と比較するためにcur(カーソル)に親を代入する
                 cur = parent
             else:
                 break
 
     def popdata(self):
         """ヒープ構造からtopにある数字を取り出す"""
+        # ヒープ最上位の値をpopnumとして取り出す
         popnum = self.parent.data
         try:
             lastd = [i for i in self.lastbranches if i.data is not None][-1]
         except IndexError:
             return None
+        # ヒープ最末端の値を最上位のdataの値に代入する
         self.parent.data = lastd.data
         lastd.data = None
+        # ヒープ構造を再構築
         self.upheap()
+        # 作業カーソルを最上位に
         cur = self.parent
         while True:
+            # 現在の二分木にデータがある場合とない場合で比較対象となるchildrenを変更する
+            # leftとright両方にデータがある場合は値の小さい方を比較対象とする
             if cur is None:
                 break
             elif cur.data is None or (cur.left is None and cur.right is None):
@@ -111,9 +127,11 @@ class Heap():
                 children = cur.left
             else:
                 children = cur.right
-
+            # 現在の二分木構造のdataの値と上記で選択した子木のdataの値を比較して子の方が
+            # dataの値が小さい時はdataの値を入れ替え
             if cur.data > children.data:
                 cur.data, children.data = children.data, cur.data
+                # さらに下の層dataの値と比較するため作業カーソルにchildrenを代入
                 cur = children
             else:
                 break
@@ -122,6 +140,7 @@ class Heap():
 
     def addnums(self, nums):
         """insert some numbers"""
+         # 前述のinsert関数をリストで連続処理する
         for i in nums:
             self.insert(i)
 
@@ -129,9 +148,11 @@ class Heap():
 def heapsort(numbers):
     """リストをヒープソートでソート処理して返す"""
     heapstr = Heap()
+    # ヒープクラスのaddnumsを使って値をヒープ構造に格納する
     heapstr.addnums(numbers)
     sortedlist = []
     while True:
+        # ヒープ構造から一つずつ値を取り出しsortedlistに加えていく
         output = heapstr.popdata()
         if output:
             sortedlist.append(output)
