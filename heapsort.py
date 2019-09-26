@@ -2,6 +2,11 @@
 
 
 class Binatree():
+    """二分木構造クラス"""
+    # dataに其の木の値を束縛
+    # left,rightは其の左右の子には初期はNoneを代入。その子に値が割り当てられる際に
+    # Binatreeとして子Binatreeクラスを代入
+    # parentbranchに親Binatreeクラスを割り当てる
     def __init__(self, parentbranch=None):
         self.data = None
         self.left = None
@@ -11,8 +16,9 @@ class Binatree():
 
 class Heap():
     def __init__(self):
-        # 親に二本木構造を割り当て
+        # 親に二分木構造を割り当て
         self.parent = Binatree(None)
+        # lastbranchesに二分木構造の最末端のデータを格納
         self.lastbranches = [self.parent]
 
     def downheap(self):
@@ -21,7 +27,7 @@ class Heap():
             if i.data is None:
                 return None
         else:
-            # 上記for文条件確認を通過したら孫にヒープ構造を割り当て
+            # 最末端のデータが全て値を持っている時、其々の左右木にヒープ構造を割り当て
             # データ処理対象を1段下がる
             branches = []
             for i in self.lastbranches:
@@ -32,13 +38,13 @@ class Heap():
             self.lastbranches = branches
 
     def upheap(self):
-        # 其の段にデータがない場合は一段上がる
+        # 最末端段のデータの全てが値を持たないときデータ処理対象を1段あげる
         for i in self.lastbranches:
             # 最上位ではNoneを返す
             if i.parentbranch is None:
                 return None
             elif i.data is not None:
-                # 其の段にデータが残っている場合 はFalseを返す
+                # 最末端の段にデータが残っている場合 はFalseを返す
                 return False
             else:
                 pass
