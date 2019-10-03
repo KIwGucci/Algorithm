@@ -7,6 +7,7 @@ class Binatree():
     # left,rightは其の左右の子には初期はNoneを代入。その子に値が割り当てられる際に
     # Binatreeとして子Binatreeクラスを代入
     # parentbranchに親Binatreeクラスを割り当てる
+
     def __init__(self, parentbranch=None):
         self.data = None
         self.left = None
@@ -140,7 +141,7 @@ class Heap():
 
     def addnums(self, nums):
         """insert some numbers"""
-         # 前述のinsert関数をリストで連続処理する
+        # 前述のinsert関数をリストで連続処理する
         for i in nums:
             self.insert(i)
 
