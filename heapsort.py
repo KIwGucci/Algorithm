@@ -162,6 +162,6 @@ def heapsort(numbers):
     return sortedlist
 
 
-example = [5, 20, 2, 1, 100, 46, 3, 2, 500, 15, 30, 5]
+example = [2, 13, 6, 4, 3, 1, 5, 7, 9, 8, 10, 2, 3, 800, 30, 40, 50]
 print(f'before {example}')
 print(f'after {heapsort(example)}')

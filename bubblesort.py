@@ -18,7 +18,7 @@ def bubblesort(numlist):
 
 
 def main():
-    before = [2, 13, 6, 4, 3, 1, 5, 7, 9, 8, 10, 2]
+    before = [2, 13, 6, 4, 3, 1, 5, 7, 9, 8, 10, 2, 3, 800, 30, 40, 50]
     print('before : {}'.format(before))
     print('after : {}'.format(bubblesort(before)))
 
