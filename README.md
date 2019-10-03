@@ -5,3 +5,4 @@ pythonで基本的なアルゴリズムを実装する
 * [選択ソート](https://ja.wikipedia.org/wiki/選択ソート):[selectsort.py](https://github.com/KIwGucci/Algorithm/blob/master/selectsort.py)
 * [挿入ソート](https://ja.wikipedia.org/wiki/挿入ソート):[insertsort.py](https://github.com/KIwGucci/Algorithm/blob/master/insertsort.py)
 * [ヒープソート](https://ja.wikipedia.org/wiki/ヒープ):[heapsort.py](https://github.com/KIwGucci/Algorithm/blob/master/heapsort.py)
+* [クイックソート](https://ja.wikipedia.org/wiki/クイックソート):[quicksort.py](https://github.com/KIwGucci/Algorithm/blob/master/quicksort.py)
