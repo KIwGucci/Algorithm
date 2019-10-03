@@ -23,14 +23,21 @@ def quicksort(nums):
         pivot = nums[-1]
         Lnum = nums[Lmarker]
         if Lnum >= pivot:
+             #左マーカがpivot以上の時
             for Rmarker in range(Rstart, -1, -1):
+                # 右マーカを左に移動開始
                 Rnum = nums[Rmarker]
                 if Rmarker == Lmarker:
+                    #右マーカが左マーカにぶつかった時、pivotとマーカの値を入れ替え
                     nums[Rmarker], nums[-1] = nums[-1], nums[Rmarker]
+                    # マーカがぶつかった値をソート済みとして其の左右の数値リストを再帰的に処理
                     return quicksort(nums[:Rmarker])+[nums[Rmarker]]+quicksort(nums[Rmarker+1:])
                 elif Rnum < pivot:
-                    Rstart = Rmarker
+                    # 右マーカがpivotより小さい時
+                    Rstart = Rmarker # 次の処理のため右マーカ開始位置を記憶
+                    # 左マーカの値と右マーカの値を入れ替え
                     nums[Rmarker], nums[Lmarker] = nums[Lmarker], nums[Rmarker]
+                    # 右マーカを停止し再び左マーカを動かす
                     break
     return quicksort(nums[:-1])+[nums[-1]]
 
